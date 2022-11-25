@@ -1,0 +1,12 @@
+/NOLOGO
+/errorReport:prompt
+/MACHINE:x64
+/SUBSYSTEM:WINDOWS
+/DEF
+/NAME:"UnrealEditor-OnlineSubsystemHubPlugin.dll"
+/IGNORE:4221
+/NODEFAULTLIB
+"E:\epic\projects\sgclient\Intermediate\Build\Win64\sgclientEditor\Development\Engine\SharedPCH.Engine.ShadowErrors.h.obj"
+"E:\epic\projects\sgclient\Plugins\OnlineSubsystemHubPlugin\Intermediate\Build\Win64\UnrealEditor\Development\OnlineSubsystemHubPlugin\OnlineSubsystemHubPlugin.cpp.obj"
+"E:\epic\projects\sgclient\Plugins\OnlineSubsystemHubPlugin\Intermediate\Build\Win64\UnrealEditor\Development\OnlineSubsystemHubPlugin\Default.rc2.res"
+/OUT:"E:\epic\projects\sgclient\Plugins\OnlineSubsystemHubPlugin\Intermediate\Build\Win64\UnrealEditor\Development\OnlineSubsystemHubPlugin\UnrealEditor-OnlineSubsystemHubPlugin.lib"

@@ -1,0 +1,17 @@
+{
+	"RemapUnityFiles": 
+	{
+		"Module.SGCore.cpp.obj": [
+			"SGCore.init.gen.cpp.obj",
+			"SGCoreTickableWorldSubsystem.gen.cpp.obj",
+			"SGCore.cpp.obj",
+			"SGCoreApp.cpp.obj",
+			"SGCoreTickableWorldSubsystem.cpp.obj",
+			"SGMsgHandler.cpp.obj",
+			"SGMsgHeader.cpp.obj",
+			"SGMsgReader.cpp.obj",
+			"SGTCPNetwork.cpp.obj",
+			"SGTypes.cpp.obj"
+		]
+	}
+}

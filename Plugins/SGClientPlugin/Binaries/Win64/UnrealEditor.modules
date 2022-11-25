@@ -1,0 +1,9 @@
+{
+	"BuildId": "23058290",
+	"Modules": 
+	{
+		"SGCore": "UnrealEditor-SGCore.dll",
+		"SGLoginModule": "UnrealEditor-SGLoginModule.dll",
+		"SGProtoBuf": "UnrealEditor-SGProtoBuf.dll"
+	}
+}

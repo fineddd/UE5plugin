@@ -1,0 +1,14 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "e:\\epic\\projects\\sgclient\\plugins\\sgclientplugin\\source\\sgprotobuf\\private\\sgprotobuf.cpp",
+        "ProvidedModule": "",
+        "PCH": "e:\\epic\\projects\\sgclient\\intermediate\\build\\win64\\sgclienteditor\\development\\coreuobject\\sharedpch.coreuobject.noshadow.noundef.h.pch",
+        "Includes": [
+            "e:\\epic\\projects\\sgclient\\plugins\\sgclientplugin\\intermediate\\build\\win64\\unrealeditor\\development\\sgprotobuf\\definitions.sgprotobuf.h",
+            "e:\\epic\\projects\\sgclient\\plugins\\sgclientplugin\\source\\sgprotobuf\\public\\sgprotobuf.h"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}

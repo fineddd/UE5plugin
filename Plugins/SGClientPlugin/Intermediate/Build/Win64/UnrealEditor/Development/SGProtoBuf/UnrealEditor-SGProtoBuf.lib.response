@@ -1,0 +1,14 @@
+/NOLOGO
+/errorReport:prompt
+/MACHINE:x64
+/SUBSYSTEM:WINDOWS
+/DEF
+/NAME:"UnrealEditor-SGProtoBuf.dll"
+/IGNORE:4221
+/NODEFAULTLIB
+"E:\epic\projects\sgclient\Intermediate\Build\Win64\sgclientEditor\Development\CoreUObject\SharedPCH.CoreUObject.NoShadow.NoUndef.h.obj"
+"E:\epic\projects\sgclient\Plugins\SGClientPlugin\Intermediate\Build\Win64\UnrealEditor\Development\SGProtoBuf\SGProtoBuf.cpp.obj"
+"E:\epic\projects\sgclient\Plugins\SGClientPlugin\Intermediate\Build\Win64\UnrealEditor\Development\SGProtoBuf\MsgID.pb.cc.obj"
+"E:\epic\projects\sgclient\Plugins\SGClientPlugin\Intermediate\Build\Win64\UnrealEditor\Development\SGProtoBuf\SGMsgBase.pb.cc.obj"
+"E:\epic\projects\sgclient\Plugins\SGClientPlugin\Intermediate\Build\Win64\UnrealEditor\Development\SGProtoBuf\Default.rc2.res"
+/OUT:"E:\epic\projects\sgclient\Plugins\SGClientPlugin\Intermediate\Build\Win64\UnrealEditor\Development\SGProtoBuf\UnrealEditor-SGProtoBuf.lib"

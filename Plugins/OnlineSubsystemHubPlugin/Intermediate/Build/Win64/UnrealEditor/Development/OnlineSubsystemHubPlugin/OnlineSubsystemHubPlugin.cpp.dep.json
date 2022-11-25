@@ -1,0 +1,14 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "e:\\epic\\projects\\sgclient\\plugins\\onlinesubsystemhubplugin\\source\\onlinesubsystemhubplugin\\private\\onlinesubsystemhubplugin.cpp",
+        "ProvidedModule": "",
+        "PCH": "e:\\epic\\projects\\sgclient\\intermediate\\build\\win64\\sgclienteditor\\development\\engine\\sharedpch.engine.shadowerrors.h.pch",
+        "Includes": [
+            "e:\\epic\\projects\\sgclient\\plugins\\onlinesubsystemhubplugin\\intermediate\\build\\win64\\unrealeditor\\development\\onlinesubsystemhubplugin\\definitions.onlinesubsystemhubplugin.h",
+            "e:\\epic\\projects\\sgclient\\plugins\\onlinesubsystemhubplugin\\source\\onlinesubsystemhubplugin\\public\\onlinesubsystemhubplugin.h"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}

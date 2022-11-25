@@ -1,0 +1,62 @@
+E:\epic\projects\sgclient\Plugins\SGClientPlugin\Source\SGProtoBuf\Private\SGMsgBase.pb.cc
+/I .
+/I E:\epic\projects\sgclient\Plugins\SGClientPlugin\Source\SGProtoBuf\Private
+/I ..\Intermediate\Build\Win64\UnrealEditor\Inc\CoreUObject\UHT
+/I Runtime
+/I Runtime\CoreUObject\Public
+/I Runtime\TraceLog\Public
+/I Runtime\Core\Public
+/I E:\epic\projects\sgclient\Plugins\SGClientPlugin\Source
+/I E:\epic\projects\sgclient\Plugins\SGClientPlugin\Source\SGProtoBuf\Public
+/external:W0
+/external:I ThirdParty\mimalloc\include
+/external:I "C:\Program Files\Microsoft Visual Studio\2022\Professional\VC\Tools\MSVC\14.32.31326\INCLUDE"
+/external:I "C:\Program Files (x86)\Windows Kits\10\include\10.0.20348.0\ucrt"
+/external:I "C:\Program Files (x86)\Windows Kits\10\include\10.0.20348.0\shared"
+/external:I "C:\Program Files (x86)\Windows Kits\10\include\10.0.20348.0\um"
+/external:I "C:\Program Files (x86)\Windows Kits\10\include\10.0.20348.0\winrt"
+/FI"E:\epic\projects\sgclient\Intermediate\Build\Win64\sgclientEditor\Development\CoreUObject\SharedPCH.CoreUObject.NoShadow.NoUndef.h"
+/FI"E:\epic\projects\sgclient\Plugins\SGClientPlugin\Intermediate\Build\Win64\UnrealEditor\Development\SGProtoBuf\Definitions.SGProtoBuf.h"
+/Yu"E:\epic\projects\sgclient\Intermediate\Build\Win64\sgclientEditor\Development\CoreUObject\SharedPCH.CoreUObject.NoShadow.NoUndef.h"
+/Fp"E:\epic\projects\sgclient\Intermediate\Build\Win64\sgclientEditor\Development\CoreUObject\SharedPCH.CoreUObject.NoShadow.NoUndef.h.pch"
+/Fo"E:\epic\projects\sgclient\Plugins\SGClientPlugin\Intermediate\Build\Win64\UnrealEditor\Development\SGProtoBuf\SGMsgBase.pb.cc.obj"
+/sourceDependencies E:\epic\projects\sgclient\Plugins\SGClientPlugin\Intermediate\Build\Win64\UnrealEditor\Development\SGProtoBuf\SGMsgBase.pb.cc.dep.json
+/Zc:inline
+/nologo
+/Oi
+/FC
+/c
+/Gw
+/Gy
+/Zm1000
+/wd4819
+/D_CRT_STDIO_LEGACY_WIDE_SPECIFIERS=1
+/D_SILENCE_STDEXT_HASH_DEPRECATION_WARNINGS=1
+/D_WINDLL
+/D_DISABLE_EXTENDED_ALIGNED_STORAGE
+/source-charset:utf-8
+/execution-charset:utf-8
+/Ob2
+/fastfail
+/Ox
+/Ot
+/GF
+/errorReport:prompt
+/EHsc
+/DPLATFORM_EXCEPTIONS_DISABLED=0
+/Z7
+/MD
+/bigobj
+/fp:fast
+/Zo
+/Zp8
+/wd4456
+/wd4458
+/wd4459
+/wd4463
+/wd4244
+/wd4838
+/TP
+/GR-
+/W4
+/std:c++17
