@@ -7,8 +7,8 @@
 #include "SGMsgCrypto.h"
 #include "SGMsgOther.pb.h"
 
-#define HEART_BEAT_TIMEOUT_MILSECS 25 * 1000
-#define HEART_BEAT_SEND_TIME 10 * 1000
+#define HEARTBEAT_TIMEOUT_MILSECS 25 * 1000
+#define HEARTBEAT_SEND_TIME 10 * 1000
 
 void SGTCPClient::Init()
 {
@@ -19,7 +19,7 @@ void SGTCPClient::Process()
 {
     if (m_bDestroyed)
     {
-        Close();
+        Close(SGSCR_ActiveClose);
         delete this;
         return;
     }
@@ -30,19 +30,19 @@ void SGTCPClient::Process()
     //recive msg
     ReceiveMsg();
     //heartbeat
-    auto nNowTime = FDateTime::Now().ToUnixTimestamp()* 1000 + FDateTime::Now().GetMillisecond();
-    if (nNowTime > m_pMsgReader->GetLastReciveMsgTime() + HEART_BEAT_TIMEOUT_MILSECS)
+    auto nNowTime = SGToolFun::GetNowMilTimeStamp();
+    if (nNowTime > m_pMsgReader->GetLastReciveHeartbeatTime() + HEARTBEAT_TIMEOUT_MILSECS)
     {
-        Close();
+        Close(SGSCR_HeartbeatTimeout);
         return;
     }
-    if (nNowTime > m_nLastSendHeartBeatTime + HEART_BEAT_SEND_TIME)
+    if (nNowTime > m_nLastSendHeartbeatTime + HEARTBEAT_SEND_TIME)
     {
-        SendHeartBeat(nNowTime);
+        SendHeartbeat(nNowTime);
     }
 }
 
-void SGTCPClient::Close()
+void SGTCPClient::Close(int nCloseReasn)
 {
     if (m_pSocket != nullptr)
     {
@@ -50,6 +50,13 @@ void SGTCPClient::Close()
         ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM)->DestroySocket(m_pSocket);
         //todo close event
         m_pSocket = nullptr;
+
+		GEngine->AddOnScreenDebugMessage(
+			-1,
+			15.f,
+			FColor::Red,
+			FString::Printf(TEXT("socket close %d !"), nCloseReasn)
+		);
     }
     m_strConnectIP = TEXT("");
     m_nConnectPort = 0;
@@ -70,7 +77,7 @@ void SGTCPClient::Destroy()
 
 bool SGTCPClient::ConnectTo(const FString& addr, uint16 port)
 {
-    Close();
+    Close(SGSCR_NewConnectClose);
 
     FIPv4Address ip;
     uint32 OutIP = 0;
@@ -115,7 +122,8 @@ bool SGTCPClient::ConnectTo(const FString& addr, uint16 port)
     m_strConnectIP = addr;
     m_nConnectPort = port;
 
-    m_nLastSendHeartBeatTime = FDateTime::Now().ToUnixTimestamp();
+    m_nLastSendHeartbeatTime = SGToolFun::GetNowMilTimeStamp();
+    m_pMsgReader->SetLastReciveHeartbeatTime(m_nLastSendHeartbeatTime);
 
     GEngine->AddOnScreenDebugMessage(
         -1,
@@ -142,7 +150,7 @@ bool SGTCPClient::Send(int nMsgID, std::string& strMsg)
     m_pSendMsgheader->m_cSerial += 1;
     m_pSendMsgheader->m_nMsgID = nMsgID;
     m_pSendMsgheader->m_uiSize = strMsg.size() + m_pSendMsgheader->GetHeadLength();
-    m_pSendMsgheader->mCrcCode = 0;
+    m_pSendMsgheader->mCrcCode = GetCrc32(strMsg);
     //packet header
     m_pMsgSendBuffer->Reset();
     m_pSendMsgheader->EnCode(m_pMsgSendBuffer->GetHead());
@@ -190,7 +198,8 @@ void SGTCPClient::ReceiveMsg()
     //}
     uint32 DataSize = 0;
     m_pSocket->HasPendingData(DataSize);
-    while (DataSize >= m_pMsgReader->GetPendingReciveDataLength())
+    while (DataSize > 0 && (m_pMsgReader->GetPendingReciveDataLength() <= 0
+        || DataSize >= (uint32)m_pMsgReader->GetPendingReciveDataLength()))
     {
         m_pMsgReciveBuffer->Reset();
         m_pMsgReciveBuffer->Reserve(FMath::Min(DataSize, 65507u));
@@ -200,7 +209,7 @@ void SGTCPClient::ReceiveMsg()
             m_pMsgReciveBuffer->MoveTail(BytesRead);
             if (!m_pMsgReader->Process(m_pMsgReciveBuffer->GetHead(), BytesRead))
             {
-                Close();
+                Close(SGSCR_MsgDataError);
                 UE_LOG(SGLog, Error, TEXT("process buffer data error, net close"));
                 return;
             }
@@ -208,12 +217,12 @@ void SGTCPClient::ReceiveMsg()
         DataSize = DataSize - BytesRead;
     }
 }
-void SGTCPClient::SendHeartBeat(int64_t nNow)
+void SGTCPClient::SendHeartbeat(int64_t nNow)
 {
 	SGMsg::ReqHeartBeat xMsg;
 	xMsg.set_attached(1);
 	Send(MsgID::MSG_REQ_HEART_BEAT, xMsg);
 
-    m_nLastSendHeartBeatTime = nNow;
-    m_pMsgReader->SetHeartBeatTime(nNow);
+    m_nLastSendHeartbeatTime = nNow;
+    m_pMsgReader->SetHeartbeatTime(nNow);
 }

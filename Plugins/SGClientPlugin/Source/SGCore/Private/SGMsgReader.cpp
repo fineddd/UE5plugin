@@ -94,15 +94,15 @@ void SGMsgReader::Reset()
 
 void SGMsgReader::OnReciveMsg()
 {
-    m_nReciveMsgTime = FDateTime::Now().ToUnixTimestamp() * 1000 + FDateTime::Now().GetMillisecond();
-    if (m_pMsgheader->GetMsgID() == MsgID::MSG_REQ_HEART_BEAT)
+    if (m_pMsgheader->GetMsgID() == MsgID::MSG_RSP_HEART_BEAT)
     {
+        m_nReciveHeartbeatTime = SGToolFun::GetNowMilTimeStamp();
 		SGMsg::RspHeartBeat xMsg;
 		if (!xMsg.ParseFromArray(m_pMsgBuff->GetHead(), m_pMsgheader->GetMsgLength() - m_pMsgheader->GetHeadLength()))
 		{
 			return;
 		}
-        m_nMsgDelay = xMsg.server_time() - m_nSendHeartBeatTime;
+        m_nMsgDelay = xMsg.server_time() - m_nSendHeartbeatTime;
 		GEngine->AddOnScreenDebugMessage(
 			-1,
 			15.f,
@@ -121,13 +121,17 @@ int32 SGMsgReader::GetPendingReciveDataLength()
 {
     return m_nNextReciveDataLength - m_pMsgBuff->GetSize();
 }
-int64_t SGMsgReader::GetLastReciveMsgTime()
+int64_t SGMsgReader::GetLastReciveHeartbeatTime()
 {
-    return m_nReciveMsgTime;
+    return m_nReciveHeartbeatTime;
 }
-void SGMsgReader::SetHeartBeatTime(int64_t nTime)
+void SGMsgReader::SetLastReciveHeartbeatTime(int64_t nLastTime)
 {
-    m_nSendHeartBeatTime = nTime;
+    m_nReciveHeartbeatTime = nLastTime;
+}
+void SGMsgReader::SetHeartbeatTime(int64_t nTime)
+{
+    m_nSendHeartbeatTime = nTime;
 }
 int64_t SGMsgReader::GetMsgDelayTime()
 {

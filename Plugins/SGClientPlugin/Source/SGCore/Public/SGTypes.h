@@ -35,3 +35,8 @@ enum EEncryptionType
     ENCRYPTION_BLOWFISH = 3,
     ENCRYPTION_SIMPLE = 4,
 };
+
+namespace SGToolFun
+{
+    static int64_t GetNowMilTimeStamp();
+}

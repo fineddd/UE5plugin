@@ -1,5 +1,5 @@
 #include "SGMsgCrypto.h"
-
+#include "boost/crc.hpp"
 
 SGCAesCFB8Encrypt::SGCAesCFB8Encrypt()
 {
@@ -296,4 +296,11 @@ TSharedPtr<IoBuffer> SGCBlowFish::Decrypt(IoBuffer& encryptMsg)
 EEncryptionType SGCBlowFish::GetEncryptType()
 {
     return EEncryptionType::ENCRYPTION_BLOWFISH;
+}
+
+static uint32 GetCrc32(std::string& strMsg)
+{
+	boost::crc_32_type crc;
+	crc.process_bytes(strMsg.data(), strMsg.length());
+	return crc.checksum();
 }

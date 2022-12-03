@@ -9,6 +9,15 @@
 
 class SGIEncrypt;
 
+enum ESGSocketCloseReason
+{
+    SGSCR_ClientDestroy,
+    SGSCR_ActiveClose,
+    SGSCR_HeartbeatTimeout,
+    SGSCR_NewConnectClose,
+    SGSCR_MsgDataError,
+};
+
 class SGCORE_API SGTCPClient
 {
 public:
@@ -22,12 +31,12 @@ public:
     };
     virtual ~SGTCPClient()
     {
-        Close();
+        Close(SGSCR_ClientDestroy);
     };
 
     void Init();
     void Process();
-    void Close();
+    void Close(int nCloseReasn);
     bool Valid();
     void Destroy();
 
@@ -44,7 +53,7 @@ private:
 
     void ReceiveMsg();
 
-    void SendHeartBeat(int64_t nNow);
+    void SendHeartbeat(int64_t nNow);
 
 private:
     bool m_bDestroyed = false;
@@ -62,5 +71,5 @@ private:
     TSharedPtr<SGClientHeader> m_pSendMsgheader;
     TSharedPtr<SGIEncrypt> m_pEnCrypto = nullptr;
     //heart beat
-    int64_t m_nLastSendHeartBeatTime;
+    int64_t m_nLastSendHeartbeatTime;
 };

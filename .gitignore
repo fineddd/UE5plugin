@@ -1,3 +1,6 @@
 *.pb
 *.pb.h
 *.pb.cc
+
+Plugins/SGClientPlugin/Binaries
+Plugins/SGClientPlugin/Intermediate

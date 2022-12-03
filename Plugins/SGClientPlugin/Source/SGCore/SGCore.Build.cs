@@ -44,6 +44,7 @@ public class SGCore : ModuleRules
 				"Sockets",
 				"OpenSSL",
 				"RigLogicLib",
+				"Boost",
 				// ... add private dependencies that you statically link with here ...	
 			}
 			);

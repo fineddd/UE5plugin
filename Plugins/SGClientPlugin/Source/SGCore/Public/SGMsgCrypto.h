@@ -197,3 +197,5 @@ private:
     unsigned char m_key[BF_ROUNDS];//秘钥16个字节
     unsigned char m_iv[BF_BLOCK];//加密反馈8个字节，单次加密块8个字节
 };
+
+static uint32 GetCrc32(std::string& strMsg);
