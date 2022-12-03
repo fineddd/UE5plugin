@@ -20,10 +20,17 @@ public:
 	UFUNCTION()
 	void LoginButtonCliked();
 
+
+	void BeginDestroy() override;
+
 protected:
 	virtual bool Initialize();
 
 private:
+	//msg cb
+	int OnEncryptoTypeRecive(uint32 nClientIndex, uint8* pData, uint32 nLength);
+private:
 	UPROPERTY(meta = (BindWidget))
 	class UButton* LoginButton;
+	int m_nTcpClientIndex = -1;
 };

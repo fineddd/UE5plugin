@@ -1,27 +1,35 @@
 #pragma once
 
 #include "SGTypes.h"
-#include "SGTCPNetwork.h"
+#include "SGTCPClient.h"
 
 class SGCORE_API SGCoreApp
 {
 public:
-	virtual ~SGCoreApp() {};
+    virtual ~SGCoreApp() {};
 
-	static SGCoreApp* GetInstance();
+    static SGCoreApp* GetInstance();
 
-	void Process();
 
-	TSharedPtr<SGTCPNetwork> GetTcpNetwork();
+    void Init();
+    void Process();
+
+    int NewTcpClient();
+    void CloseTcpClient(int nIndex);
+    TSharedPtr<SGTCPClient> GetTcpClient(int nIndex);
+
+
 
 private:
-	SGCoreApp()
-	{
-		m_pTcpNetwork = MakeShared<SGTCPNetwork>();
-	};
+    SGCoreApp()
+    {
+        //??
+        Init();
+    };
 
 private:
-	static SGCoreApp* pCoreApp;
+    static SGCoreApp* pCoreApp;
 
-	TSharedPtr<SGTCPNetwork> m_pTcpNetwork;
+    TMap<int, TSharedPtr<SGTCPClient>> m_mapTcpClient;
+    int m_nTcpClientIndex = 0;
 };

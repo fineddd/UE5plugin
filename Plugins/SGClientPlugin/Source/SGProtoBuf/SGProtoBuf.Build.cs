@@ -7,6 +7,8 @@ public class SGProtoBuf : ModuleRules
 {
 	public SGProtoBuf(ReadOnlyTargetRules Target) : base(Target)
 	{
+		//Type = ModuleType.External;
+		
 		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
 		
 		PublicIncludePaths.AddRange(
@@ -49,6 +51,10 @@ public class SGProtoBuf : ModuleRules
 			);
 
 		// Protobuf source integrationg
+
+		//PublicSystemIncludePaths.Add(Path.Combine(ModuleDirectory, "lib"));
+		//PublicSystemIncludePaths.Add(Path.Combine(ModuleDirectory, "Public"));
+
 		ShadowVariableWarningLevel = WarningLevel.Off;
 		bEnableUndefinedIdentifierWarnings = false;
 		if (Target.Platform == UnrealTargetPlatform.Win64)
@@ -57,6 +63,9 @@ public class SGProtoBuf : ModuleRules
 		}
 		PublicDefinitions.Add("_CRT_SECURE_NO_WARNINGS");
 		PublicDefinitions.Add("GOOGLE_PROTOBUF_NO_RTTI=1");
+		//PublicDefinitions.Add("GOOGLE_PROTOBUF_CMAKE_BUILD");
+
 		PublicAdditionalLibraries.Add(Path.Combine(ModuleDirectory, "lib", "libprotobuf.lib"));
+		//Path.Combine(PluginDirectory, "Source/NetWork/ThirdParty/Protobuf/Lib/libprotobuf.lib");
 	}
 }

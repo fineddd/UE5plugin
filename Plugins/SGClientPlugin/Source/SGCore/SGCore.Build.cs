@@ -42,6 +42,7 @@ public class SGCore : ModuleRules
 				"SlateCore",
 				"Networking",
 				"Sockets",
+				"OpenSSL",
 				"RigLogicLib",
 				// ... add private dependencies that you statically link with here ...	
 			}

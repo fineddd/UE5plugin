@@ -901,6 +901,7 @@
 #pragma warning(disable: 4127)
 // decimal digit terminates octal escape sequence
 #pragma warning(disable: 4125)
+#pragma warning(disable : 4800)
 #endif
 
 // We don't want code outside port_def doing complex testing, so

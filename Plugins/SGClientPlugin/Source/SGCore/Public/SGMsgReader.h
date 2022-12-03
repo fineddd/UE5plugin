@@ -7,7 +7,9 @@
 class SGCORE_API SGMsgReader
 {
 public:
-	SGMsgReader() {
+	SGMsgReader(uint32 nClientIndex)
+		:m_nClientIndex(nClientIndex)
+	{
 		m_pMsgBuff = MakeShared<IoBuffer>(1024*1024);
 	};
 	virtual ~SGMsgReader() {};
@@ -20,9 +22,21 @@ public:
 
 	void OnReciveMsg();
 
+	int32 GetPendingReciveDataLength();
+	//void SetClientIndex(uint32 nClientIndex);
+	int64_t GetLastReciveMsgTime();
+	void SetHeartBeatTime(int64_t nTime);
+	int64_t GetMsgDelayTime();
+	
 private:
-
+	uint32 m_nClientIndex = -1;
 	EMsgReadState m_nState = MRS_HeadType;
 	TSharedPtr<SGMsgHeaderBase> m_pMsgheader;
 	TSharedPtr<IoBuffer> m_pMsgBuff;
+	int64_t m_nReciveMsgTime = 0;
+	int64_t m_nSendHeartBeatTime = 0;
+	uint32 m_nMsgDelay = 0;
+
+	uint32 m_nNextReciveDataLength = 1;
+
 };

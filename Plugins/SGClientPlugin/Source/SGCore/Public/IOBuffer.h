@@ -148,25 +148,25 @@ struct SGCORE_API IoBuffer
 	}
 
 	// 当前数据长度
-	inline uint32 GetSize()
+	inline uint32 GetSize() const
 	{
 		return m_tail - m_head;
 	}
 
 	// 获取尾部空闲大小
-	inline uint32 GetFreeSize()
+	inline uint32 GetFreeSize() const
 	{
 		return m_capacity - m_tail;
 	}
 
 	// 获取所有的空闲大小
-	inline uint32 GetAllFreeSize()
+	inline uint32 GetAllFreeSize() const
 	{
 		return m_capacity - GetSize();
 	}
 
 	// 获取容量
-	inline uint32 GetCapacity()
+	inline uint32 GetCapacity() const
 	{
 		return m_capacity;
 	}

@@ -27,10 +27,6 @@ public class SGLoginModule : ModuleRules
 			new string[]
 			{
 				"Core",
-				"UMG",
-				"Slate",
-				"SlateCore",
-				"SGCore",
 				// ... add other public dependencies that you statically link with here ...
 			}
 			);
@@ -44,6 +40,8 @@ public class SGLoginModule : ModuleRules
 				"Slate",
 				"SlateCore",
 				"SGCore",
+				"UMG",
+				"SGProtoBuf",
 				// ... add private dependencies that you statically link with here ...	
 			}
 			);

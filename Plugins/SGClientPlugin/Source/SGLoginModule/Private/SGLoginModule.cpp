@@ -2,6 +2,7 @@
 
 #include "SGLoginModule.h"
 
+
 #define LOCTEXT_NAMESPACE "FSGLoginModule"
 
 void FSGLoginModule::StartupModule()
