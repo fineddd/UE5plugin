@@ -2,13 +2,19 @@
 
 #include "SGLoginWidget.h"
 #include "Components/Button.h"
-#include "SGTCPClient.h"
-#include "SGCoreApp.h"
+#include "Components/VerticalBox.h"
+#include "Components/Image.h"
+#include "Components/EditableText.h"
+#include "Components/ListView.h"
+#include "Components/CanvasPanel.h"
+#include "Components/ProgressBar.h"
 
-#include "MsgID.pb.h"
-#include "SGMsgHandler.h"
-#include "SGMsgBase.pb.h"
+#include "SGLoginProcess.h"
 
+#include "SGMsgLogin.pb.h"
+
+#include "SGServerListItem.h"
+#include "SGDefine.pb.h"
 
 void USGLoginWidget::MenuSetup()
 {
@@ -30,6 +36,9 @@ void USGLoginWidget::MenuSetup()
             PlayerController->SetShowMouseCursor(true);
         }
     }
+
+    CanvasPanelServerList->SetVisibility(ESlateVisibility::Hidden);
+    //PanelLoading->SetVisibility(ESlateVisibility::Hidden);
 }
 
 void USGLoginWidget::LoginButtonCliked()
@@ -43,23 +52,79 @@ void USGLoginWidget::LoginButtonCliked()
             FString(TEXT("Login Button cliked"))
         );
     }
-    if (m_nTcpClientIndex < 0)
-    {
-        m_nTcpClientIndex = SGCoreApp::GetInstance()->NewTcpClient();
-    }
-    auto pNetWork = SGCoreApp::GetInstance()->GetTcpClient(m_nTcpClientIndex);
 
-    FString addr = TEXT("10.26.12.232");
-    pNetWork->ConnectTo(addr, 39001);
+    SGLoginProcess::Instance().OnLoginBegin(PlayerIDInputText->GetText().ToString(), ConfigAddrInputText->GetText().ToString());
+    //EditAreaBox->SetVisibility(ESlateVisibility::Hidden);
 }
-
-void USGLoginWidget::BeginDestroy()
+void USGLoginWidget::QuitServerListButtonCliked()
 {
-	Super::BeginDestroy();
-
-    SGMsgHandler::GetInstance()->UnRegMsgDelegate(MsgID::MSG_C2S_REQ_ACCOUNT_LOGIN);
+    CanvasPanelServerList->SetVisibility(ESlateVisibility::Hidden);
+    ListViewServer->ClearListItems();
+    EditAreaBox->SetVisibility(ESlateVisibility::Visible);
+    SGLoginProcess::Instance().ChoiceServerCancel();
 }
+void USGLoginWidget::SetAreaChoiceMenu(const SGMsg::S2SServerInfoReportList& xServerInfoList)
+{
+    EditAreaBox->SetVisibility(ESlateVisibility::Hidden);
+	int nServerIndex = 0;
 
+	ListViewServer->ClearListItems();
+	for (int i = 0; i < xServerInfoList.server_list_size(); ++i)
+	{
+		auto& xServerInfo = xServerInfoList.server_list(i);
+		if (xServerInfo.server_state() == SGDefine::EST_MAINTEN)
+		{
+			continue;
+		}
+		int nButtonIndex = nServerIndex % 2;
+		if (nButtonIndex == 0)
+		{
+            auto pItem = NewObject<USGServerListItem>();
+			ListViewServer->AddItem(pItem);
+		}
+		int itemsize = ListViewServer->GetNumItems();
+		auto pWidget = static_cast<USGServerListItem*>(ListViewServer->GetItemAt(itemsize - 1));
+		pWidget->SetServerItemData(nButtonIndex, xServerInfo.big_area(), xServerInfo.area(), xServerInfo.area_name());
+		++nServerIndex;
+	}
+	GEngine->AddOnScreenDebugMessage(
+		-1,
+		15.f,
+		FColor::Black,
+		FString::Printf(TEXT("server size %d !"), nServerIndex)
+	);
+	//ListViewServer->RequestRefresh();
+    CanvasPanelServerList->SetVisibility(ESlateVisibility::Visible);
+	return;
+}
+//void USGLoginWidget::SetLoadingMenu()
+//{
+//    CanvasPanelServerList->SetVisibility(ESlateVisibility::Hidden);
+//    EditAreaBox->SetVisibility(ESlateVisibility::Hidden);
+//    LoginBgImage->SetVisibility(ESlateVisibility::Hidden);
+//
+//    ProgressBarLoading->SetPercent(0.1);
+//    PanelLoading->SetVisibility(ESlateVisibility::Visible);
+//}
+//void USGLoginWidget::SetLoadingProgress(float percent)
+//{
+//    ProgressBarLoading->SetPercent(percent);
+//}
+void USGLoginWidget::BeforeDestroy()
+{
+    RemoveFromParent();
+	UWorld* World = GetWorld();
+	if (World)
+	{
+		APlayerController* PlayerController = World->GetFirstPlayerController();
+		if (PlayerController)
+		{
+			FInputModeGameOnly InputModeData;
+			PlayerController->SetInputMode(InputModeData);
+			PlayerController->SetShowMouseCursor(false);
+		}
+	}
+}
 bool USGLoginWidget::Initialize()
 {
     if (!Super::Initialize())
@@ -70,33 +135,9 @@ bool USGLoginWidget::Initialize()
     {
         LoginButton->OnClicked.AddDynamic(this, &ThisClass::LoginButtonCliked);
     }
-    SGMsgHandler::GetInstance()->RegMsgDelegate(MsgID::MSG_C2S_REQ_ACCOUNT_LOGIN, this, &USGLoginWidget::OnEncryptoTypeRecive);
+	if (ButtonQuitServerList)
+	{
+        ButtonQuitServerList->OnClicked.AddDynamic(this, &ThisClass::QuitServerListButtonCliked);
+	}
     return true;
-}
-
-int USGLoginWidget::OnEncryptoTypeRecive(uint32 nClientIndex, uint8* pData, uint32 nLength)
-{
-	SGMsg::GUID xMsg;
-
-	if (!xMsg.ParseFromArray(pData, nLength))
-	{
-		//UE_LOG(SGLog, Error, TEXT("parse msg error,"), nLength);
-		return 1;
-	}
-    auto pNetWork = SGCoreApp::GetInstance()->GetTcpClient(nClientIndex);
-	if (xMsg.head() != 0 && xMsg.data() != 0)
-	{
-        pNetWork->SetCrypto(true);
-	}
-	else
-	{
-        pNetWork->SetCrypto(false);
-	}
-	GEngine->AddOnScreenDebugMessage(
-		-1,
-		15.f,
-		FColor::Red,
-		FString(TEXT("OnEncryptoTypeRecive!"))
-	);
-	return 0;
 }

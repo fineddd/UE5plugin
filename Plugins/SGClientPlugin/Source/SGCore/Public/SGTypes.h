@@ -4,7 +4,7 @@
 //#include "Engine.h"
 #include "EngineGlobals.h"
 //#include "EngineGlobals.h"
-//#include "Delegates/DelegateCombinations.h"
+#include "Delegates/DelegateCombinations.h"
 //#include "Delegates/DelegateInstancesImpl.h"
 #include "Containers/UnrealString.h"
 //class MemoryStream;
@@ -12,8 +12,11 @@
 
 typedef uint16 TMsgID;
 
+DECLARE_DELEGATE(LoginFinishDelegate);
+DECLARE_DELEGATE(FakeLoadingFinishDelegate);
 DECLARE_DELEGATE_RetVal_ThreeParams(int, MsgHandleDelegate, uint32, uint8*, uint32)
 DECLARE_LOG_CATEGORY_EXTERN(SGLog, Log, All)
+
 
 enum EMsgHeadType
 {
@@ -38,5 +41,7 @@ enum EEncryptionType
 
 namespace SGToolFun
 {
+    static int nServerDeltaTime = 0;
     static int64_t GetNowMilTimeStamp();
+    static int64_t GetServerNowMilTimeStamp();
 }

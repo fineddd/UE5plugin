@@ -55,7 +55,7 @@ void SGTCPClient::Close(int nCloseReasn)
 			-1,
 			15.f,
 			FColor::Red,
-			FString::Printf(TEXT("socket close %d !"), nCloseReasn)
+			FString::Printf(TEXT("socket close by reason: %d !"), nCloseReasn)
 		);
     }
     m_strConnectIP = TEXT("");
@@ -116,6 +116,12 @@ bool SGTCPClient::ConnectTo(const FString& addr, uint16 port)
     }
     if (!Connect(*internetAddr))
     {
+		GEngine->AddOnScreenDebugMessage(
+			-1,
+			15.f,
+			FColor::Red,
+			FString::Printf(TEXT("connect failed %s:%d !"), *addr, port)
+		);
         return false;
     }
     //todo connect event
@@ -128,8 +134,8 @@ bool SGTCPClient::ConnectTo(const FString& addr, uint16 port)
     GEngine->AddOnScreenDebugMessage(
         -1,
         15.f,
-        FColor::Red,
-        FString::Printf(TEXT("connect success %s !"), *addr)
+        FColor::Blue,
+        FString::Printf(TEXT("connect success %s:%d !"), *addr, port)
     );
     return true;
 }
@@ -141,23 +147,29 @@ bool SGTCPClient::Send(int nMsgID, std::string& strMsg)
         UE_LOG(SGLog, Error, TEXT("socket null %d"), nMsgID);
         return false;
     }
+    std::string* pMsgData = &strMsg;
+    std::string strEncryptoData;
+	if (m_pEnCrypto != nullptr)
+	{
+        strEncryptoData = m_pEnCrypto->Encrypt(strMsg);
+        pMsgData = &strEncryptoData;
+	}
 
-    if (m_pEnCrypto != nullptr)
-    {
-        strMsg = m_pEnCrypto->Encrypt(strMsg);
-    }
     //todo sgmsg packeter
     m_pSendMsgheader->m_cSerial += 1;
     m_pSendMsgheader->m_nMsgID = nMsgID;
-    m_pSendMsgheader->m_uiSize = strMsg.size() + m_pSendMsgheader->GetHeadLength();
-    m_pSendMsgheader->mCrcCode = GetCrc32(strMsg);
+    m_pSendMsgheader->m_uiSize = pMsgData->size() + m_pSendMsgheader->GetHeadLength();
+    m_pSendMsgheader->mCrcCode = GetCrc32(*pMsgData);
     //packet header
     m_pMsgSendBuffer->Reset();
     m_pSendMsgheader->EnCode(m_pMsgSendBuffer->GetHead());
     m_pMsgSendBuffer->MoveTail(m_pSendMsgheader->GetHeadLength());
-    m_pMsgSendBuffer->Append((const uint8*)strMsg.c_str(), strMsg.size());
+
+    m_pMsgSendBuffer->Append((const uint8*)pMsgData->c_str(), pMsgData->size());
+
     //
     int32 sent = 0;
+    //todo 发送失败处理
     return m_pSocket->Send(m_pMsgSendBuffer->GetHead(), m_pMsgSendBuffer->GetSize(), sent);
 }
 bool SGTCPClient::Send(int nMsgID, google::protobuf::Message& xMsg)
@@ -175,8 +187,9 @@ void SGTCPClient::SetCrypto(bool bEncrypto)
     if (bEncrypto)
     {
 		//暂时默认使用这种，可以改成配置或参数
-		auto pEnCrypto = MakeShared<SGCBlowFish>();
-		pEnCrypto->InitBFKey();
+		auto pEnCrypto = MakeShared<SGCSimpleEncrypt>();
+        std::string strKey = "1234567890123456";
+		pEnCrypto->InitKey((unsigned char*)strKey.c_str(), strKey.size());
 		m_pEnCrypto = pEnCrypto;
     }
     else

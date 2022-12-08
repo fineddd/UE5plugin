@@ -17,6 +17,24 @@ public:
     virtual EEncryptionType GetEncryptType() = 0;
 };
 
+class SGCSimpleEncrypt : public SGIEncrypt
+{
+public:
+	SGCSimpleEncrypt();
+	virtual ~SGCSimpleEncrypt()
+	{
+
+	}
+
+	bool InitKey(unsigned char* key, int nLen);
+	virtual std::string Encrypt(std::string& strData);
+	virtual TSharedPtr<IoBuffer> Decrypt(IoBuffer& encryptMsg);
+    virtual EEncryptionType GetEncryptType();
+
+private:
+	const static int m_KeyLenght = 8;
+	unsigned char m_key[m_KeyLenght];//秘钥8个字节
+};
 
 class SGCAesCFB8Encrypt : public SGIEncrypt
 {

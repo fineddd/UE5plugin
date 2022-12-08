@@ -8,7 +8,7 @@
 void USGCoreTickableWorldSubsystem::Tick(float DeltaTime)
 {
 	//Super::Tick(DeltaTime);
-	SGCoreApp::GetInstance()->Process();
+	SGCoreApp::GetInstance()->Process(DeltaTime);
 }
 
 TStatId USGCoreTickableWorldSubsystem::GetStatId() const

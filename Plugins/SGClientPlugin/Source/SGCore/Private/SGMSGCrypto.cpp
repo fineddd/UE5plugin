@@ -304,3 +304,78 @@ static uint32 GetCrc32(std::string& strMsg)
 	crc.process_bytes(strMsg.data(), strMsg.length());
 	return crc.checksum();
 }
+
+SGCSimpleEncrypt::SGCSimpleEncrypt()
+{
+	memset(m_key, 0, sizeof(m_key));
+}
+
+bool SGCSimpleEncrypt::InitKey(unsigned char* key, int nLen)
+{
+	//密钥长度16个字节
+	for (int i = 0; i < m_KeyLenght; ++i)
+	{
+		if (i < nLen)
+		{
+			m_key[i] = key[i];
+		}
+		else
+		{
+			m_key[i] = 'c';
+		}
+	}
+
+	return true;
+}
+
+std::string SGCSimpleEncrypt::Encrypt(std::string& strData)
+{
+	if (strData.size() < m_KeyLenght)
+	{
+		return strData;
+	}
+
+	size_t nEncryptSize = (strData.size() / m_KeyLenght) * m_KeyLenght;
+	size_t nLeftSize = strData.size() - nEncryptSize;
+
+	unsigned char* encrypt_string = nullptr;
+
+	// alloc decrypt_string
+	encrypt_string = new unsigned char[nEncryptSize];
+	if (encrypt_string == nullptr)
+	{
+		return "";
+	}
+
+	for (size_t i = 0; i < nEncryptSize; i += m_KeyLenght)
+	{
+		for (size_t iKey = 0; iKey < m_KeyLenght && (i + iKey) < nEncryptSize; iKey++)
+		{
+			encrypt_string[i + iKey] = strData[i + iKey] ^ m_key[iKey];
+		}
+	}
+
+	std::string encrypt_msg((char*)encrypt_string, nEncryptSize);
+	if (nLeftSize > 0)
+	{
+		encrypt_msg += strData.substr(nEncryptSize, nLeftSize);
+	}
+
+	if (encrypt_string != nullptr)
+	{
+		delete[] encrypt_string;
+		encrypt_string = nullptr;
+	}
+
+	return encrypt_msg;
+}
+
+TSharedPtr<IoBuffer> SGCSimpleEncrypt::Decrypt(IoBuffer& encryptMsg)
+{
+    return nullptr;
+}
+
+EEncryptionType SGCSimpleEncrypt::GetEncryptType()
+{
+    return EEncryptionType::ENCRYPTION_SIMPLE;
+}

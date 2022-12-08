@@ -6,6 +6,10 @@
 #include "Blueprint/UserWidget.h"
 #include "SGLoginWidget.generated.h"
 
+namespace SGMsg
+{
+	class S2SServerInfoReportList;
+}
 /**
  * 
  */
@@ -20,17 +24,41 @@ public:
 	UFUNCTION()
 	void LoginButtonCliked();
 
+	UFUNCTION()
+	void QuitServerListButtonCliked();
 
-	void BeginDestroy() override;
+	void SetAreaChoiceMenu(const SGMsg::S2SServerInfoReportList& xServerInfoList);
+	//void SetLoadingMenu();
+	//void SetLoadingProgress(float percent);
 
+	void BeforeDestroy();
 protected:
 	virtual bool Initialize();
 
 private:
-	//msg cb
-	int OnEncryptoTypeRecive(uint32 nClientIndex, uint8* pData, uint32 nLength);
+
 private:
+	//login
 	UPROPERTY(meta = (BindWidget))
 	class UButton* LoginButton;
-	int m_nTcpClientIndex = -1;
+	UPROPERTY(meta = (BindWidget))
+	class UVerticalBox* EditAreaBox;
+	UPROPERTY(meta = (BindWidget))
+	class UImage* LoginBgImage;
+	UPROPERTY(meta = (BindWidget))
+	class UEditableText* ConfigAddrInputText;
+	UPROPERTY(meta = (BindWidget))
+	class UEditableText* PlayerIDInputText;
+	//server list
+	UPROPERTY(meta = (BindWidget))
+	class UCanvasPanel* CanvasPanelServerList;
+	UPROPERTY(meta = (BindWidget))
+	class UButton* ButtonQuitServerList;
+	UPROPERTY(meta = (BindWidget))
+	class UListView* ListViewServer;
+
+	//UPROPERTY(meta = (BindWidget))
+	//class UCanvasPanel* PanelLoading;
+	//UPROPERTY(meta = (BindWidget))
+	//class UProgressBar* ProgressBarLoading;
 };

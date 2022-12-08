@@ -102,7 +102,7 @@ void SGMsgReader::OnReciveMsg()
 		{
 			return;
 		}
-        m_nMsgDelay = xMsg.server_time() - m_nSendHeartbeatTime;
+        m_nMsgDelay = xMsg.server_time() - SGToolFun::nServerDeltaTime - m_nSendHeartbeatTime;
 		GEngine->AddOnScreenDebugMessage(
 			-1,
 			15.f,

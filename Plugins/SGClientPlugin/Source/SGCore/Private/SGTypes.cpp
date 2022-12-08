@@ -7,3 +7,7 @@ int64_t SGToolFun::GetNowMilTimeStamp()
 {
 	return FDateTime::Now().ToUnixTimestamp() * 1000 + FDateTime::Now().GetMillisecond();
 }
+static int64_t SGToolFun::GetServerNowMilTimeStamp()
+{
+	return GetNowMilTimeStamp() + nServerDeltaTime;
+}

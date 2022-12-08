@@ -8,6 +8,7 @@ public class SGCore : ModuleRules
 {
 	public SGCore(ReadOnlyTargetRules Target) : base(Target)
 	{
+		OptimizeCode = CodeOptimization.Never;
 		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
 		PublicIncludePaths.AddRange(
 			new string[] {

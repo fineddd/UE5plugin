@@ -13,7 +13,10 @@ public:
     static SGMsgHandler* GetInstance();
 
     template <typename UserClass>
-    bool RegMsgDelegate(TMsgID nMsgID, UserClass* pClass, int (UserClass::* UserDelegate)(uint32, uint8*, uint32));
+    bool RegMsgUObjectDelegate(TMsgID nMsgID, UserClass* pClass, int (UserClass::* UserDelegate)(uint32, uint8*, uint32));
+	
+    template <typename UserClass>
+	bool RegMsgRowDelegate(TMsgID nMsgID, UserClass* pClass, int (UserClass::* UserDelegate)(uint32, uint8*, uint32));
 
     void UnRegMsgDelegate(TMsgID nMsgID);
 
@@ -29,7 +32,7 @@ private:
 };
 
 template <typename UserClass>
-bool SGMsgHandler::RegMsgDelegate(TMsgID nMsgID, UserClass* pClass, int (UserClass::* UserDelegate)(uint32, uint8*, uint32))
+bool SGMsgHandler::RegMsgUObjectDelegate(TMsgID nMsgID, UserClass* pClass, int (UserClass::* UserDelegate)(uint32, uint8*, uint32))
 {
 	auto pMsgDelegates = m_mapMsgDelegates.Find(nMsgID);
 	if (pMsgDelegates != nullptr)
@@ -38,7 +41,23 @@ bool SGMsgHandler::RegMsgDelegate(TMsgID nMsgID, UserClass* pClass, int (UserCla
 		return false;
 	}
 	MsgHandleDelegate xDelegate;
-	xDelegate.BindUObject(pClass, UserDelegate);
+    xDelegate.BindUObject(pClass, UserDelegate);
+
     m_mapMsgDelegates.Add(nMsgID, xDelegate);
     return true;
+}
+template <typename UserClass>
+bool SGMsgHandler::RegMsgRowDelegate(TMsgID nMsgID, UserClass* pClass, int (UserClass::* UserDelegate)(uint32, uint8*, uint32))
+{
+	auto pMsgDelegates = m_mapMsgDelegates.Find(nMsgID);
+	if (pMsgDelegates != nullptr)
+	{
+		//UE_LOG(SGLog, Error, TEXT("repeated msg delegate msgid: %d"), nMsgID);
+		return false;
+	}
+	MsgHandleDelegate xDelegate;
+	xDelegate.BindRaw(pClass, UserDelegate);
+
+	m_mapMsgDelegates.Add(nMsgID, xDelegate);
+	return true;
 }
